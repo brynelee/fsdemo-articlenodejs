@@ -4,9 +4,11 @@ RUN mkdir -p /usr/app
 WORKDIR /usr/app
 
 COPY ./ ./
+
+EXPOSE 8080
+
 RUN npm install && npm run build
 
-EXPOSE 3000
 # CMD ["npm", "start"]
 
 FROM node:18-alpine
