@@ -9,8 +9,6 @@ EXPOSE 8080
 
 RUN npm install && npm run build
 
-# CMD ["npm", "start"]
-
 FROM node:18-alpine
 
 WORKDIR /app
@@ -21,6 +19,8 @@ COPY --from=build_image /usr/app/dist ./dist
 
 COPY --from=build_image /usr/app/node_modules ./node_modules
 
-RUN npm i -g http-server
+# RUN npm i -g http-server
 
-CMD http-server ./dist
+# CMD http-server ./dist
+
+CMD ["npm", "start"]
