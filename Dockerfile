@@ -1,26 +1,32 @@
-FROM node:18 AS build_image
+FROM node:18 AS development
 
-RUN mkdir -p /usr/app
-WORKDIR /usr/app
+WORKDIR /usr/src/app
 
-COPY ./ ./
+COPY package*.json ./
 
-EXPOSE 8080
+RUN npm install --only=development
 
-RUN npm install && npm run build
+COPY . .
 
-FROM node:18-alpine
+RUN npm run build
 
-WORKDIR /app
+FROM node:18-alpine as production
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --only=production
+
+COPY . .
 
 # copy from build image
 
-COPY --from=build_image /usr/app/dist ./dist
+COPY --from=development /usr/src/app/dist ./dist
 
-COPY --from=build_image /usr/app/node_modules ./node_modules
+EXPOSE 8087
 
-# RUN npm i -g http-server
-
-# CMD http-server ./dist
-
-CMD ["npm", "start"]
+CMD ["node", "dist/main"]
