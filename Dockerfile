@@ -9,7 +9,7 @@ RUN npm install && npm run build
 EXPOSE 3000
 # CMD ["npm", "start"]
 
-FROM node:10-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
